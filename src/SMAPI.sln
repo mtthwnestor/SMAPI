@@ -81,7 +81,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SMAPI.Web.LegacyRedirects",
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		SMAPI.Internal\SMAPI.Internal.projitems*{0634ea4c-3b8f-42db-aea6-ca9e4ef6e92f}*SharedItemsImports = 5
+		SMAPI.Internal\SMAPI.Internal.projitems*{0a9bb24f-15ff-4c26-b1a2-81f7ae316518}*SharedItemsImports = 5
+		SMAPI.Internal\SMAPI.Internal.projitems*{1b3821e6-d030-402c-b3a1-7ca45c2800ea}*SharedItemsImports = 5
+		SMAPI.Internal\SMAPI.Internal.projitems*{80efd92f-728f-41e0-8a5b-9f6f49a91899}*SharedItemsImports = 5
 		SMAPI.Internal\SMAPI.Internal.projitems*{85208f8d-6fd1-4531-be05-7142490f59fe}*SharedItemsImports = 13
+		SMAPI.Internal\SMAPI.Internal.projitems*{cd53ad6f-97f4-4872-a212-50c2a0fd3601}*SharedItemsImports = 5
+		SMAPI.Internal\SMAPI.Internal.projitems*{e6da2198-7686-4f1d-b312-4a4dc70884c0}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

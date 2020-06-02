@@ -16,6 +16,9 @@ namespace StardewModdingAPI.Web
             // configure web server
             WebHost
                 .CreateDefaultBuilder(args)
+                .CaptureStartupErrors(true)
+                .UseSetting("detailedErrors", "true")
+                .UseKestrel().UseIISIntegration() // must be used together; fixes intermittent errors on Azure: https://stackoverflow.com/a/38312175/262123
                 .UseStartup<Startup>()
                 .Build()
                 .Run();

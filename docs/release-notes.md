@@ -1,6 +1,63 @@
 &larr; [README](README.md)
 
 # Release notes
+## 3.5
+Released 27 April 2020 for Stardew Valley 1.4.1 or later.
+
+* For players:
+  * SMAPI now prevents more game errors due to broken items, so you no longer need save editing to remove them.
+  * Added option to disable console colors.
+  * Updated compatibility list.
+  * Improved translations.¹
+
+* For the Console Commands mod:
+  * Commands like `world_setday` now also affect the 'days played' stat, so in-game events/randomization match what you'd get if you played to that date normally (thanks to kdau!).
+
+* For the web UI:
+  * Updated the JSON validator/schema for Content Patcher 1.13.
+  * Fixed rare intermittent "CGI application encountered an error" errors.
+
+* For modders:
+  * Added map patching to the content API (via `asset.AsMap()`).
+  * Added support for using patch helpers with arbitrary data (via `helper.Content.GetPatchHelper`).
+  * Added `SDate` fields/methods: `SeasonIndex`, `FromDaysSinceStart`, `FromWorldDate`, `ToWorldDate`, and `ToLocaleString` (thanks to kdau!).
+  * Added `SDate` translations taken from the Lookup Anything mod.¹
+  * Fixed asset propagation for certain maps loaded through temporary content managers. This notably fixes unreliable patches to the farmhouse and town maps.
+  * Fixed asset propagation on Linux/Mac for monster sprites, NPC dialogue, and NPC schedules.
+  * Fixed asset propagation for NPC dialogue sometimes causing a spouse to skip marriage dialogue or not allow kisses.
+
+¹ Date format translations were taken from the Lookup Anything mod; thanks to translators FixThisPlz (improved Russian), LeecanIt (added Italian), pomepome (added Japanese), S2SKY (added Korean), Sasara (added German), SteaNN (added Russian), ThomasGabrielDelavault (added Spanish), VincentRoth (added French), Yllelder (improved Spanish), and yuwenlan (added Chinese). Some translations for Korean, Hungarian, and Turkish were derived from the game translations.
+
+## 3.4.1
+Released 24 March 2020 for Stardew Valley 1.4.1 or later.
+
+* For modders:
+  * Asset changes now propagate to NPCs in an event (e.g. wedding sprites).
+  * Fixed mouse input suppression not working in SMAPI 3.4.
+
+## 3.4
+Released 22 March 2020 for Stardew Valley 1.4.1 or later.
+
+* For players:
+  * Fixed semi-transparency issues on Linux/Mac in recent versions of Mono (e.g. pink shadows).
+  * Fixed `player_add` command error if you have broken XNB mods.
+  * Removed invalid-location check now handled by the game.
+  * Updated translations. Thanks to Annosz (added Hungarian)!
+
+* For modders:
+  * Added support for flipped and rotated map tiles (in collaboration with Platonymous).
+  * Added support for `.tmx` maps using zlib compression (thanks to Platonymous!).
+  * Added `this.Monitor.LogOnce` method.
+  * Mods are no longer prevented from suppressing key presses in the chatbox.
+
+* For the web UI:
+  * Added option to upload files using a file picker.
+  * Optimized log parser for very long multi-line log messages.
+  * Fixed log parser not detecting folder path in recent versions of SMAPI.
+
+* For SMAPI developers:
+  * Added internal API to send custom input to the game/mods. This is mainly meant to support Virtual Keyboard on Android, but might be exposed as a public API in future versions.
+
 ## 3.3.2
 Released 22 February 2020 for Stardew Valley 1.4.1 or later.
 
@@ -27,6 +84,10 @@ Released 22 February 2020 for Stardew Valley 1.4.1 or later.
   * Fixed warning on MacOS when you have no saves yet.
   * Reduced log messages.
 
+* For the web UI:
+  * Updated the JSON validator and Content Patcher schema for `.tmx` support.
+  * The mod compatibility page now has a sticky table header.
+
 * For modders:
   * Added support for [message sending](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs/Integrations#Message_sending) to mods on the current computer (in addition to remote computers).
   * Added `ExtendImage` method to content API when editing files to resize textures.
@@ -36,10 +97,6 @@ Released 22 February 2020 for Stardew Valley 1.4.1 or later.
   * When mods load an asset using a more general type like `content.Load<object>`, SMAPI now calls `IAssetEditor` instances with the actual asset type instead of the specified one.
   * Updated dependencies (including Mono.Cecil 0.11.1 → 0.11.2).
   * Fixed dialogue propagation clearing marriage dialogue.
-
-* For the web UI:
-  * Updated the JSON validator and Content Patcher schema for `.tmx` support.
-  * The mod compatibility page now has a sticky table header.
 
 * For SMAPI/tool developers:
   * Improved support for four-part versions to support SMAPI on Android.

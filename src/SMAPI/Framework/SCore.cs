@@ -32,6 +32,7 @@ using StardewModdingAPI.Toolkit.Framework.Clients.WebApi;
 using StardewModdingAPI.Toolkit.Framework.ModData;
 using StardewModdingAPI.Toolkit.Serialization;
 using StardewModdingAPI.Toolkit.Utilities;
+using StardewModdingAPI.Utilities;
 using StardewValley;
 using Object = StardewValley.Object;
 using ThreadState = System.Threading.ThreadState;
@@ -175,6 +176,8 @@ namespace StardewModdingAPI.Framework
             SCore.PerformanceMonitor.InitializePerformanceCounterCollections(this.EventManager);
 
             SCore.DeprecationManager = new DeprecationManager(this.Monitor, this.ModRegistry);
+
+            SDate.Translations = this.Translator;
 
             // redirect direct console output
             if (this.MonitorForGame.WriteToConsole)

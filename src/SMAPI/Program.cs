@@ -41,7 +41,7 @@ namespace StardewModdingAPI
                 Program.AssertGameVersion();
                 Program.Start(args);
             }
-            catch (BadImageFormatException ex) when (ex.FileName == "StardewValley")
+            catch (BadImageFormatException ex) when (ex.FileName == "StardewValley" || ex.FileName == "Stardew Valley") // NOTE: don't use StardewModdingAPI.Constants here, assembly resolution isn't hooked up at this point
             {
                 string executableName = Program.GetExecutableAssemblyName();
                 Console.WriteLine($"SMAPI failed to initialize because your game's {executableName}.exe seems to be invalid.\nThis may be a pirated version which modified the executable in an incompatible way; if so, you can try a different download or buy a legitimate version.\n\nTechnical details:\n{ex}");
@@ -143,8 +143,8 @@ namespace StardewModdingAPI
             }
 
             // load SMAPI
-            using (SCore core = new SCore(modsPath, writeToConsole))
-                core.RunInteractively();
+            using SCore core = new SCore(modsPath, writeToConsole);
+            core.RunInteractively();
         }
 
         /// <summary>Write an error directly to the console and exit.</summary>

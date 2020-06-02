@@ -1,5 +1,5 @@
 using System;
-using Harmony;
+using HarmonyLib;
 
 namespace StardewModdingAPI.Framework.Patching
 {
@@ -27,7 +27,7 @@ namespace StardewModdingAPI.Framework.Patching
         /// <param name="patches">The patches to apply.</param>
         public void Apply(params IHarmonyPatch[] patches)
         {
-            HarmonyInstance harmony = HarmonyInstance.Create("io.smapi");
+            Harmony harmony = new Harmony("SMAPI");
             foreach (IHarmonyPatch patch in patches)
             {
                 try

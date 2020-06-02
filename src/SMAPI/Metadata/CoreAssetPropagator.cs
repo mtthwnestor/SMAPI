@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using Netcode;
 using StardewModdingAPI.Framework.Reflection;
+using StardewModdingAPI.Toolkit.Utilities;
 using StardewValley;
 using StardewValley.BellsAndWhistles;
 using StardewValley.Buildings;
@@ -815,9 +816,18 @@ namespace StardewModdingAPI.Metadata
                     where key != null && lookup.Contains(key)
                     select new { Npc = npc, Key = key }
                 )
-                .ToArray();
-            if (!characters.Any())
-                return;
+                .ToList();
+
+            // special case: Gil is a private NPC field on the AdventureGuild class (only used for the portrait)
+            {
+                string gilKey = this.NormalizeAssetNameIgnoringEmpty("Portraits/Gil");
+                if (lookup.Contains(gilKey))
+                {
+                    GameLocation adventureGuild = Game1.getLocationFromName("AdventureGuild");
+                    if (adventureGuild != null)
+                        characters.Add(new { Npc = this.Reflection.GetField<NPC>(adventureGuild, "Gil").GetValue(), Key = gilKey });
+                }
+            }
 
             // update portrait
             foreach (var target in characters)
@@ -891,11 +901,13 @@ namespace StardewModdingAPI.Metadata
             // doesn't store the text itself.
             foreach (NPC villager in villagers)
             {
+                bool shouldSayMarriageDialogue = villager.shouldSayMarriageDialogue.Value;
                 MarriageDialogueReference[] marriageDialogue = villager.currentMarriageDialogue.ToArray();
 
                 villager.resetSeasonalDialogue(); // doesn't only affect seasonal dialogue
                 villager.resetCurrentDialogue();
 
+                villager.shouldSayMarriageDialogue.Set(shouldSayMarriageDialogue);
                 villager.currentMarriageDialogue.Set(marriageDialogue);
             }
 
@@ -949,7 +961,14 @@ namespace StardewModdingAPI.Metadata
         /// <summary>Get all NPCs in the game (excluding farm animals).</summary>
         private IEnumerable<NPC> GetCharacters()
         {
-            return this.GetLocations().SelectMany(p => p.characters);
+            foreach (NPC character in this.GetLocations().SelectMany(p => p.characters))
+                yield return character;
+
+            if (Game1.CurrentEvent?.actors != null)
+            {
+                foreach (NPC character in Game1.CurrentEvent.actors)
+                    yield return character;
+            }
         }
 
         /// <summary>Get all farm animals in the game.</summary>
@@ -1030,9 +1049,9 @@ namespace StardewModdingAPI.Metadata
         /// <param name="path">The path to check.</param>
         private string[] GetSegments(string path)
         {
-            if (path == null)
-                return new string[0];
-            return path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            return path != null
+                ? PathUtilities.GetSegments(path)
+                : new string[0];
         }
 
         /// <summary>Count the number of segments in a path (e.g. 'a/b' is 2).</summary>

@@ -3,8 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI.Events;
 using StardewModdingAPI.Framework.ModLoading;
 using StardewModdingAPI.Framework.ModLoading.Finders;
+using StardewModdingAPI.Framework.ModLoading.RewriteFacades;
 using StardewModdingAPI.Framework.ModLoading.Rewriters;
-using StardewModdingAPI.Framework.RewriteFacades;
 using StardewValley;
 
 namespace StardewModdingAPI.Metadata
@@ -25,16 +25,21 @@ namespace StardewModdingAPI.Metadata
         *********/
         /// <summary>Get rewriters which detect or fix incompatible CIL instructions in mod assemblies.</summary>
         /// <param name="paranoidMode">Whether to detect paranoid mode issues.</param>
-        public IEnumerable<IInstructionHandler> GetHandlers(bool paranoidMode)
+        /// <param name="platformChanged">Whether the assembly was rewritten for crossplatform compatibility.</param>
+        public IEnumerable<IInstructionHandler> GetHandlers(bool paranoidMode, bool platformChanged)
         {
             /****
             ** rewrite CIL to fix incompatible code
             ****/
             // rewrite for crossplatform compatibility
-            yield return new MethodParentRewriter(typeof(SpriteBatch), typeof(SpriteBatchMethods), onlyIfPlatformChanged: true);
+            if (platformChanged)
+                yield return new MethodParentRewriter(typeof(SpriteBatch), typeof(SpriteBatchFacade));
 
             // rewrite for Stardew Valley 1.3
             yield return new StaticFieldToConstantRewriter<int>(typeof(Game1), "tileSize", Game1.tileSize);
+
+            // rewrite for SMAPI 3.6 (Harmony 1.x => 2.0 update)
+            yield return new Harmony1AssemblyRewriter();
 
             /****
             ** detect mod issues
@@ -46,7 +51,7 @@ namespace StardewModdingAPI.Metadata
             /****
             ** detect code which may impact game stability
             ****/
-            yield return new TypeFinder("Harmony.HarmonyInstance", InstructionHandleResult.DetectedGamePatch);
+            yield return new TypeFinder(typeof(HarmonyLib.Harmony).FullName, InstructionHandleResult.DetectedGamePatch);
             yield return new TypeFinder("System.Runtime.CompilerServices.CallSite", InstructionHandleResult.DetectedDynamic);
             yield return new FieldFinder(typeof(SaveGame).FullName, nameof(SaveGame.serializer), InstructionHandleResult.DetectedSaveSerializer);
             yield return new FieldFinder(typeof(SaveGame).FullName, nameof(SaveGame.farmerSerializer), InstructionHandleResult.DetectedSaveSerializer);
